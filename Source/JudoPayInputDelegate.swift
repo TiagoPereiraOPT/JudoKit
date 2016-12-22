@@ -119,4 +119,11 @@ public protocol JudoPayInputDelegate {
      */
     func judoPayInputDidChangeText(_ input: JudoPayInputField)
     
+    /**
+     Delegate method that is called whenever any inputField has been finished editing
+     
+     - parameter input: The input field calling the delegate method
+     */
+    func judoInputEditingDidEnd(_ input: JudoPayInputField)
+    
 }

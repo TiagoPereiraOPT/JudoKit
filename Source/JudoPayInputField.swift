@@ -63,7 +63,11 @@ open class JudoPayInputField: UIView, UITextFieldDelegate, ErrorAnimatable {
     
     internal lazy var logoContainerView: UIView = UIView()
     
-    let redBlock = UIView()
+    //THe bottom border the transaction into an error indictator upon invalid input.
+    fileprivate let borderBottom = UIView()
+    
+    //Hint to display user hints or error message upon invalid input.
+    fileprivate let hintLabel = UILabel()
     
     // MARK: Initializers
     
@@ -111,28 +115,33 @@ open class JudoPayInputField: UIView, UITextFieldDelegate, ErrorAnimatable {
      Helper method to initialize the view
      */
     func setupView() {
-        self.redBlock.backgroundColor = self.theme.getErrorColor()
+        //Set up the bottom border
+        self.borderBottom.translatesAutoresizingMaskIntoConstraints = false
+        self.borderBottom.backgroundColor = UIColor(colorLiteralRed: 0.67, green: 0.67, blue: 0.67, alpha: 1)
+        
+        //Set up hint label
+        self.hintLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.hintLabel.font = UIFont(name: self.hintLabel.font.fontName, size: 12)
 
         self.backgroundColor = self.theme.getInputFieldBackgroundColor()
         self.clipsToBounds = true
         
         self.translatesAutoresizingMaskIntoConstraints = false
-        self.layer.borderColor = self.theme.getInputFieldBorderColor().cgColor
-        self.layer.borderWidth = 0.5
         
         self.textField.delegate = self
         self.textField.keyboardType = .numberPad
+        self.textField.keepBaseline = true
+        self.textField.titleYPadding = 0.0
         
         self.addSubview(self.textField)
-        self.addSubview(self.redBlock)
+        self.addSubview(self.borderBottom)
+        self.addSubview(self.hintLabel)
         
         self.textField.translatesAutoresizingMaskIntoConstraints = false
         self.textField.textColor = self.theme.getInputFieldTextColor()
         self.textField.tintColor = self.theme.tintColor
-        self.textField.font = UIFont.boldSystemFont(ofSize: 14)
+        self.textField.font = UIFont.boldSystemFont(ofSize: 16)
         self.textField.addTarget(self, action: #selector(JudoInputType.textFieldDidChangeValue(_:)), for: .editingChanged)
-        
-        self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[text]|", options: .alignAllLastBaseline, metrics: nil, views: ["text":textField]))
         
         self.setActive(false)
         
@@ -140,7 +149,7 @@ open class JudoPayInputField: UIView, UITextFieldDelegate, ErrorAnimatable {
         
         if self.containsLogo() {
             let logoView = self.logoView()!
-            logoView.frame = CGRect(x: 0, y: 0, width: 42, height: 27)
+            logoView.frame = CGRect(x: 0, y: 0, width: 46, height: 30)
             self.addSubview(self.logoContainerView)
             self.logoContainerView.translatesAutoresizingMaskIntoConstraints = false
             self.logoContainerView.clipsToBounds = true
@@ -148,24 +157,46 @@ open class JudoPayInputField: UIView, UITextFieldDelegate, ErrorAnimatable {
             self.logoContainerView.addSubview(logoView)
             
             self.addConstraint(NSLayoutConstraint(item: self.logoContainerView, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1.0, constant: 0.0))
-            self.logoContainerView.addConstraint(NSLayoutConstraint(item: self.logoContainerView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 27.0))
+            self.logoContainerView.addConstraint(NSLayoutConstraint(item: self.logoContainerView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 30.0))
         }
         
-        let visualFormat = self.containsLogo() ? "|-13-[text][logo(42)]-13-|" : "|-13-[text]-13-|"
-        let views: [String:UIView] = ["text": textField, "logo": self.logoContainerView]
-        
-        self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: visualFormat, options: .directionLeftToRight, metrics: nil, views: views))
+        self.setUpConstraints()
     }
     
     // MARK: Helpers
     
+    private func setUpConstraints() {
+        //Border bottom horizontal
+        self.addConstraint(vfl: "H:|-13-[borderBottom]-13-|", option: NSLayoutFormatOptions.directionLeftToRight)
+        self.addConstraint(vfl: "H:|-13-[hintLabel]-13-|", option: NSLayoutFormatOptions.directionLeftToRight)
+        self.addConstraint(vfl: self.containsLogo() ? "H:|-13-[text][logo(46)]-13-|" : "H:|-13-[text]-13-|", option: NSLayoutFormatOptions.directionLeftToRight)
+        self.addConstraint(vfl: "V:|[text]-8-[borderBottom(0.5)]-5-[hintLabel(15)]|", option: NSLayoutFormatOptions(rawValue: 0))
+        
+        if self.containsLogo() {
+            self.addConstraint(vfl: "V:|-5-[logo(30)]|", option: NSLayoutFormatOptions(rawValue: 0))
+        }
+    }
+    
+    private func addConstraint(vfl: String, option: NSLayoutFormatOptions) {
+        var views = [
+            "text" : self.textField,
+            "borderBottom" : self.borderBottom,
+            "hintLabel" : self.hintLabel
+        ]
+        
+        if self.containsLogo() {
+            views["logo"] = self.logoContainerView
+        }
+        
+        self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: vfl, options: option, metrics: nil, views: views))
+    }
     
     /**
      In the case of an updated card logo, this method animates the change
      */
     open func updateCardLogo() {
         let logoView = self.logoView()!
-        logoView.frame = CGRect(x: 0, y: 0, width: 42, height: 27)
+        logoView.frame = CGRect(x: 0, y: 0, width: 46, height: 30)
         if let oldLogoView = self.logoContainerView.subviews.first as? CardLogoView {
             if oldLogoView.type != logoView.type {
                 UIView.transition(from: self.logoContainerView.subviews.first!, to: logoView, duration: 0.3, options: .transitionFlipFromBottom, completion: nil)
@@ -183,6 +214,7 @@ open class JudoPayInputField: UIView, UITextFieldDelegate, ErrorAnimatable {
     open func setActive(_ isActive: Bool) {
         self.textField.alpha = isActive ? 1.0 : 0.5
         self.logoContainerView.alpha = isActive ? 1.0 : 0.5
+        self.borderBottom.alpha = isActive ? 1.0 : 0.5
     }
     
     
@@ -190,10 +222,9 @@ open class JudoPayInputField: UIView, UITextFieldDelegate, ErrorAnimatable {
      Method that dismisses the error generated in the `errorAnmiation:` method
      */
     open func dismissError() {
-        if self.redBlock.bounds.size.height > 0 {
+        if self.borderBottom.bounds.size.height > 0 {
             UIView.animate(withDuration: 0.4, animations: { () -> Void in
-                self.redBlock.frame = CGRect(x: 0.0, y: self.bounds.height, width: self.bounds.width, height: 4.0)
-                self.textField.textColor = self.theme.getInputFieldTextColor()
+                self.setBorderBottomAsNormal()
             }) 
         }
     }
@@ -216,8 +247,30 @@ open class JudoPayInputField: UIView, UITextFieldDelegate, ErrorAnimatable {
      */
     open func textFieldDidEndEditing(_ textField: UITextField) {
         self.setActive(textField.text?.characters.count > 0)
+        self.delegate?.judoInputEditingDidEnd(self)
     }
     
+    open func setBorderBottomAsError() {
+        self.borderBottom.frame = CGRect(x: self.borderBottom.frame.origin.x, y: self.borderBottom.frame.origin.y, width: self.borderBottom.frame.size.width, height: 2.0)
+        self.borderBottom.backgroundColor = self.theme.getErrorColor()
+        self.textField.textColor = self.theme.getErrorColor()
+    }
+    
+    open func setBorderBottomAsNormal() {
+        self.borderBottom.frame = CGRect(x: self.borderBottom.frame.origin.x, y: self.borderBottom.frame.origin.y, width: self.borderBottom.frame.size.width, height: 0.5)
+        self.borderBottom.backgroundColor = UIColor(colorLiteralRed: 0.67, green: 0.67, blue: 0.67, alpha: 1) 
+        self.textField.textColor = self.theme.getTextColor()
+    }
+    
+    open func setErrorHintText(message: String) {
+        self.hintLabel.text = message
+        self.hintLabel.textColor = self.theme.getErrorColor()
+    }
+    
+    open func setHintText(message: String) {
+        self.hintLabel.text = message
+        self.hintLabel.textColor = self.theme.getTextColor()
+    }
 }
 
 extension JudoPayInputField: JudoInputType {

@@ -71,14 +71,12 @@ open class JudoPayView: UIView {
     var paymentEnabled = false
     var currentKeyboardHeight: CGFloat = 0.0
     
-    /// The hint label object
-    let hintLabel: HintLabel
-    
     /// the security message label that is shown if showSecurityMessage is set to true
     let securityMessageLabel: UILabel = {
         let label = UILabel(frame: CGRect.zero)
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .left
         return label
     }()
     
@@ -109,7 +107,6 @@ open class JudoPayView: UIView {
         self.transactionType = type
         self.cardDetails = cardDetails
         self.theme = currentTheme
-        self.hintLabel = HintLabel(currentTheme: currentTheme)
         self.paymentButton = PayButton(currentTheme: currentTheme)
         self.loadingView = LoadingView(currentTheme: currentTheme)
 
@@ -235,7 +232,6 @@ open class JudoPayView: UIView {
         self.contentView.addSubview(secureCodeInputField)
         self.contentView.addSubview(billingCountryInputField)
         self.contentView.addSubview(postCodeInputField)
-        self.contentView.addSubview(hintLabel)
         self.contentView.addSubview(securityMessageLabel)
         
         self.addSubview(paymentButton)
@@ -250,11 +246,7 @@ open class JudoPayView: UIView {
         self.startDateInputField.delegate = self
         self.billingCountryInputField.delegate = self
         self.postCodeInputField.delegate = self
-        
-        self.hintLabel.font = UIFont.systemFont(ofSize: 14)
-        self.hintLabel.numberOfLines = 3
-        self.hintLabel.translatesAutoresizingMaskIntoConstraints = false
-        
+
         // Layout constraints
         self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "|[scrollView]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["scrollView":contentView]))
         self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[scrollView]-1-[button]", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["scrollView":contentView, "button":paymentButton]))
@@ -277,16 +269,14 @@ open class JudoPayView: UIView {
         self.contentView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-(-1)-[start]-(-1)-[issue(==start)]-(-1)-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["start":startDateInputField, "issue":issueNumberInputField]))
         self.contentView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-(-1)-[billing]-(-1)-[post(==billing)]-(-1)-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["billing":billingCountryInputField, "post":postCodeInputField]))
         
-        self.contentView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-(12)-[hint]-(12)-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["hint":hintLabel]))
-        
         self.contentView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-(12)-[securityMessage]-(12)-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["securityMessage":securityMessageLabel]))
         
-        self.contentView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-75-[card(fieldHeight)]-(-1)-[start]-(-1)-[expiry(fieldHeight)]-(-1)-[billing]-(20)-[hint(18)]-(15)-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: ["fieldHeight":self.theme.inputFieldHeight], views: ["card":cardInputField, "start":startDateInputField, "expiry":expiryDateInputField, "billing":billingCountryInputField, "hint":hintLabel]))
-        self.contentView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-75-[card(fieldHeight)]-(-1)-[issue(==start)]-(-1)-[security(fieldHeight)]-(-1)-[post]-(20)-[hint]-(15)-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: ["fieldHeight":self.theme.inputFieldHeight], views: ["card":cardInputField, "issue":issueNumberInputField, "start":startDateInputField, "security":secureCodeInputField, "post":postCodeInputField, "hint":hintLabel]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-80-[card(fieldHeight)]-(5)-[start]-(5)-[expiry(fieldHeight)]-(5)-[billing]-(5)-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: ["fieldHeight":self.theme.inputFieldHeight], views: ["card":cardInputField, "start":startDateInputField, "expiry":expiryDateInputField, "billing":billingCountryInputField]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-80-[card(fieldHeight)]-(5)-[issue(==start)]-(5)-[security(fieldHeight)]-(5)-[post]-(5)-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: ["fieldHeight":self.theme.inputFieldHeight], views: ["card":cardInputField, "issue":issueNumberInputField, "start":startDateInputField, "security":secureCodeInputField, "post":postCodeInputField]))
         
         self.maestroFieldsHeightConstraint = NSLayoutConstraint(item: startDateInputField, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 1.0)
         self.avsFieldsHeightConstraint = NSLayoutConstraint(item: billingCountryInputField, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 0.0)
-        self.securityMessageTopConstraint = NSLayoutConstraint(item: securityMessageLabel, attribute: .top, relatedBy: .equal, toItem: self.hintLabel, attribute: .bottom, multiplier: 1.0, constant: -self.hintLabel.bounds.height)
+        self.securityMessageTopConstraint = NSLayoutConstraint(item: securityMessageLabel, attribute: .top, relatedBy: .equal, toItem: self.expiryDateInputField, attribute: .bottom, multiplier: 1.0, constant: 10)
         
         self.securityMessageLabel.isHidden = !(self.theme.showSecurityMessage)
         
@@ -324,17 +314,16 @@ open class JudoPayView: UIView {
      - parameter isVisible: Whether start date and issue number fields should be visible
      */
     open func toggleStartDateVisibility(_ isVisible: Bool) {
-        self.maestroFieldsHeightConstraint?.constant = isVisible ? self.theme.inputFieldHeight : 1
+        self.maestroFieldsHeightConstraint?.constant = isVisible ? self.theme.inputFieldHeight : 0
+        
         self.issueNumberInputField.setNeedsUpdateConstraints()
         self.startDateInputField.setNeedsUpdateConstraints()
         
-        UIView.animate(withDuration: 0.2, delay: 0.0, options:UIViewAnimationOptions.curveEaseIn, animations: { () -> Void in
-            self.issueNumberInputField.layoutIfNeeded()
-            self.startDateInputField.layoutIfNeeded()
-            
-            self.expiryDateInputField.layoutIfNeeded()
-            self.secureCodeInputField.layoutIfNeeded()
-            }, completion: nil)
+        self.issueNumberInputField.layoutIfNeeded()
+        self.startDateInputField.layoutIfNeeded()
+        
+        self.expiryDateInputField.layoutIfNeeded()
+        self.secureCodeInputField.layoutIfNeeded()
     }
     
     
@@ -348,17 +337,20 @@ open class JudoPayView: UIView {
      */
     open func toggleAVSVisibility(_ isVisible: Bool, completion: (() -> ())? = nil) {
         self.avsFieldsHeightConstraint?.constant = isVisible ? self.theme.inputFieldHeight : 0
+        self.securityMessageTopConstraint?.constant = isVisible ? 15 + self.theme.inputFieldHeight : 10;
+        
         self.billingCountryInputField.setNeedsUpdateConstraints()
         self.postCodeInputField.setNeedsUpdateConstraints()
+        self.securityMessageLabel.setNeedsUpdateConstraints()
         
-        UIView.animate(withDuration: 0.2, animations: { () -> Void in
-            self.billingCountryInputField.layoutIfNeeded()
-            self.postCodeInputField.layoutIfNeeded()
-            }, completion: { (didFinish) -> Void in
-                if let completion = completion {
-                    completion()
-                }
-        }) 
+        self.billingCountryInputField.layoutIfNeeded()
+        self.postCodeInputField.layoutIfNeeded()
+        self.securityMessageLabel.layoutIfNeeded()
+        
+        if let completion = completion {
+            completion()
+        }
+
     }
     
     // MARK: Helpers
@@ -406,34 +398,15 @@ open class JudoPayView: UIView {
      - parameter input: The input field which the user is currently idling
      */
     func showHintAfterDefaultDelay(_ input: JudoPayInputField) {
-        if self.secureCodeInputField.isTokenPayment && self.secureCodeInputField.textField.text!.characters.count == 0 {
-            self.hintLabel.showHint(self.secureCodeInputField.hintLabelText())
-        } else {
-            self.hintLabel.hideHint()
-        }
-        self.updateSecurityMessagePosition(toggleUp: true)
+        let showHint = self.secureCodeInputField.isTokenPayment && self.secureCodeInputField.textField.text!.characters.count == 0
+        
+        let hintText = showHint ? self.secureCodeInputField.hintLabelText() : "";
+        input.setHintText(message: hintText)
+        
         _ = Timer.schedule(3.0, handler: { (timer) -> Void in
-            let hintLabelText = input.hintLabelText()
-            if hintLabelText.characters.count > 0
-                && input.textField.text?.characters.count == 0
-                && input.textField.isFirstResponder {
-                
-                self.updateSecurityMessagePosition(toggleUp: false)
-                self.hintLabel.showHint(input.hintLabelText())
+            if (input.hintLabelText().characters.count > 0 && input.textField.text?.characters.count == 0 && input.textField.isFirstResponder) {
+                input.setHintText(message: input.hintLabelText())
             }
         })
     }
-    
-    
-    /**
-     Helper method to update the position of the security message
-     
-     - parameter toggleUp: whether the label should move up or down
-     */
-    func updateSecurityMessagePosition(toggleUp: Bool) {
-        self.contentView.layoutIfNeeded()
-        self.securityMessageTopConstraint?.constant = (toggleUp && !self.hintLabel.isActive()) ? -self.hintLabel.bounds.height : 14
-        UIView.animate(withDuration: 0.3, animations: { self.contentView.layoutIfNeeded() }) 
-    }
-    
 }

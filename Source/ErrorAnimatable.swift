@@ -38,7 +38,7 @@ extension ErrorAnimatable where Self: JudoPayInputField {
      */
     public func errorAnimation(_ redBlock: Bool) {
         // Animate the red block on the bottom
-    
+        
         var keysTimes = [NSNumber]()
         keysTimes.append(NSNumber(value: 0))
         keysTimes.append(NSNumber(value: (1 / 11.0)))
@@ -61,12 +61,10 @@ extension ErrorAnimatable where Self: JudoPayInputField {
         }
         
         if redBlock {
-            self.redBlock.frame = CGRect(x: 0, y: self.bounds.height, width: self.bounds.width, height: 4.0)
-            
             UIView.animate(withDuration: 0.2, animations: { () -> Void in
-                self.redBlock.frame = CGRect(x: 0, y: self.bounds.height - 4, width: self.bounds.width, height: 4.0)
+                self.setBorderBottomAsError()
                 self.textField.textColor = self.theme.getErrorColor()
-                }, completion: blockAnimation)
+            }, completion: blockAnimation)
         } else {
             blockAnimation(true)
         }
