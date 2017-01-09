@@ -76,7 +76,6 @@ open class JudoPayView: UIView {
         let label = UILabel(frame: CGRect.zero)
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .left
         return label
     }()
     
@@ -209,7 +208,7 @@ open class JudoPayView: UIView {
         attributedString.append(NSAttributedString(string: self.theme.securityMessageString, attributes: [NSForegroundColorAttributeName:self.theme.getTextColor(), NSFontAttributeName:UIFont.systemFont(ofSize: self.theme.securityMessageTextSize)]))
         
         let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.alignment = .justified
+        paragraphStyle.alignment = .left
         paragraphStyle.lineSpacing = 3
         
         attributedString.addAttribute(NSParagraphStyleAttributeName, value: paragraphStyle, range: NSMakeRange(0, attributedString.length))

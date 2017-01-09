@@ -72,7 +72,7 @@ public extension String {
             if cardLengthMatchedPatterns.count != patterns.count {
                 message += "\(strippedSelf.characters.count)-digit \(cardNetwork.stringValue()) cards"
             } else {
-                message += "\(cardNetwork.stringValue()), please use other cards"
+                message += "\(cardNetwork.stringValue())"
             }
             throw JudoError(.invalidCardNetwork, message)
         }
