@@ -207,6 +207,7 @@ open class JudoPayInputField: UIView, UITextFieldDelegate, ErrorAnimatable {
     open func textFieldDidBeginEditing(_ textField: UITextField) {
         self.setActive(true)
         self.delegate?.judoPayInputDidChangeText(self)
+        Tracking.sharedInstance.textFieldDidBeginEditing(textField: self)
     }
     
     /**
@@ -216,6 +217,7 @@ open class JudoPayInputField: UIView, UITextFieldDelegate, ErrorAnimatable {
      */
     open func textFieldDidEndEditing(_ textField: UITextField) {
         self.setActive(textField.text?.characters.count > 0)
+        Tracking.sharedInstance.textFieldDidEndEditing(textField: self)
     }
     
 }
@@ -237,6 +239,7 @@ extension JudoPayInputField: JudoInputType {
      */
     public func didChangeInputText() {
         self.delegate?.judoPayInputDidChangeText(self)
+        Tracking.sharedInstance.didChangeInputText(textField: self)
     }
     
     
@@ -309,6 +312,9 @@ extension JudoPayInputField: JudoInputType {
     public func hintLabelText() -> String {
         return ""
     }
-    
+ 
+    public func fieldName() -> String {
+        return ""
+    }
 }
 

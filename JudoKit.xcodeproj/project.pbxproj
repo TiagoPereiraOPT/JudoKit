@@ -55,10 +55,17 @@
 		3BC4C0D01C6204A60010CE14 /* JudoPayView+JudoPayInputDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BC4C0CF1C6204A60010CE14 /* JudoPayView+JudoPayInputDelegate.swift */; };
 		3BFD9A951CD9F74E00B8385D /* DedupTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFD9A931CD9F72B00B8385D /* DedupTestCase.swift */; };
 		7028042E1CE4DC2100150B21 /* CardDetailsSetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7028042D1CE4DC2100150B21 /* CardDetailsSetTests.swift */; };
+		70347BE71E2D2C4100AA5390 /* ApplicationTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70347BE61E2D2C4100AA5390 /* ApplicationTracking.swift */; };
+		70347BE91E2D2D1000AA5390 /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70347BE81E2D2D1000AA5390 /* Field.swift */; };
+		70347BEB1E2D2DD600AA5390 /* FieldMetaDataGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70347BEA1E2D2DD600AA5390 /* FieldMetaDataGenerator.swift */; };
+		70347BED1E2D2F0200AA5390 /* TrackedField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70347BEC1E2D2F0200AA5390 /* TrackedField.swift */; };
+		70347BEF1E2D34D000AA5390 /* FieldTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70347BEE1E2D34D000AA5390 /* FieldTracking.swift */; };
 		7068ABF31D2BC19300581A5A /* ThemeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7068ABF11D2BC0B600581A5A /* ThemeTests.swift */; };
 		708E1F891CBFDB4500114057 /* ErrorMessageContentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 708E1F881CBFDB4500114057 /* ErrorMessageContentsTests.swift */; };
 		70A7EF3E1D91280700FF573B /* JudoShield.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B125B931C5FC67E0086BB18 /* JudoShield.framework */; };
 		70ADAAD41CE247EC00DC0172 /* JudoTestCaseConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70ADAAD21CE247E400DC0172 /* JudoTestCaseConfig.swift */; };
+		70B3D4711E2D3C5B002487DC /* Tracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B3D4701E2D3C5B002487DC /* Tracking.swift */; };
+		70B3D4741E2D43A8002487DC /* FieldTrackingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B3D4721E2D4373002487DC /* FieldTrackingTests.swift */; };
 		70F49E281DC353C6003B8D3B /* NSDate+Judo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70F49E271DC353C6003B8D3B /* NSDate+Judo.swift */; };
 		DA0C19B91B986B5400CD2613 /* CardLogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0C19B81B986B5400CD2613 /* CardLogoView.swift */; };
 		DA3902351B95B5DF001A703C /* JudoPayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA3902341B95B5DF001A703C /* JudoPayViewController.swift */; };
@@ -156,9 +163,16 @@
 		3BC4C0CF1C6204A60010CE14 /* JudoPayView+JudoPayInputDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "JudoPayView+JudoPayInputDelegate.swift"; sourceTree = "<group>"; };
 		3BFD9A931CD9F72B00B8385D /* DedupTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DedupTestCase.swift; sourceTree = "<group>"; };
 		7028042D1CE4DC2100150B21 /* CardDetailsSetTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardDetailsSetTests.swift; sourceTree = "<group>"; };
+		70347BE61E2D2C4100AA5390 /* ApplicationTracking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplicationTracking.swift; sourceTree = "<group>"; };
+		70347BE81E2D2D1000AA5390 /* Field.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Field.swift; sourceTree = "<group>"; };
+		70347BEA1E2D2DD600AA5390 /* FieldMetaDataGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FieldMetaDataGenerator.swift; sourceTree = "<group>"; };
+		70347BEC1E2D2F0200AA5390 /* TrackedField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackedField.swift; sourceTree = "<group>"; };
+		70347BEE1E2D34D000AA5390 /* FieldTracking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FieldTracking.swift; sourceTree = "<group>"; };
 		7068ABF11D2BC0B600581A5A /* ThemeTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeTests.swift; sourceTree = "<group>"; };
 		708E1F881CBFDB4500114057 /* ErrorMessageContentsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorMessageContentsTests.swift; sourceTree = "<group>"; };
 		70ADAAD21CE247E400DC0172 /* JudoTestCaseConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JudoTestCaseConfig.swift; sourceTree = "<group>"; };
+		70B3D4701E2D3C5B002487DC /* Tracking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tracking.swift; sourceTree = "<group>"; };
+		70B3D4721E2D4373002487DC /* FieldTrackingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FieldTrackingTests.swift; sourceTree = "<group>"; };
 		70F49E271DC353C6003B8D3B /* NSDate+Judo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDate+Judo.swift"; sourceTree = "<group>"; };
 		DA0C19B81B986B5400CD2613 /* CardLogoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = CardLogoView.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		DA3902341B95B5DF001A703C /* JudoPayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = JudoPayViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -273,8 +287,22 @@
 				70ADAAD21CE247E400DC0172 /* JudoTestCaseConfig.swift */,
 				7028042D1CE4DC2100150B21 /* CardDetailsSetTests.swift */,
 				7068ABF11D2BC0B600581A5A /* ThemeTests.swift */,
+				70B3D4721E2D4373002487DC /* FieldTrackingTests.swift */,
 			);
 			path = Tests;
+			sourceTree = "<group>";
+		};
+		70347BE51E2D2BC300AA5390 /* Tracking */ = {
+			isa = PBXGroup;
+			children = (
+				70347BE61E2D2C4100AA5390 /* ApplicationTracking.swift */,
+				70347BE81E2D2D1000AA5390 /* Field.swift */,
+				70347BEA1E2D2DD600AA5390 /* FieldMetaDataGenerator.swift */,
+				70347BEE1E2D34D000AA5390 /* FieldTracking.swift */,
+				70347BEC1E2D2F0200AA5390 /* TrackedField.swift */,
+				70B3D4701E2D3C5B002487DC /* Tracking.swift */,
+			);
+			name = Tracking;
 			sourceTree = "<group>";
 		};
 		DA0C19BC1B986B5800CD2613 /* CardLogos */ = {
@@ -347,6 +375,7 @@
 		DA76A5FF1B7B73D30033E553 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				70347BE51E2D2BC300AA5390 /* Tracking */,
 				3B02A0231CAA769500953312 /* API */,
 				3B02A0241CAA769900953312 /* Model */,
 				3B02ED171C63BD6B0045C705 /* Theme */,
@@ -533,6 +562,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				70B3D4741E2D43A8002487DC /* FieldTrackingTests.swift in Sources */,
 				7068ABF31D2BC19300581A5A /* ThemeTests.swift in Sources */,
 				70ADAAD41CE247EC00DC0172 /* JudoTestCaseConfig.swift in Sources */,
 				3B5A601F1CAACFFE00E98AC6 /* ReceiptTests.swift in Sources */,
@@ -570,8 +600,10 @@
 				3B02A0481CAA76B000953312 /* JudoErrors.swift in Sources */,
 				70F49E281DC353C6003B8D3B /* NSDate+Judo.swift in Sources */,
 				DA53A27F1BDE430B000C0A99 /* NSTimer+Blocks.swift in Sources */,
+				70347BEF1E2D34D000AA5390 /* FieldTracking.swift in Sources */,
 				DA3902461B983959001A703C /* JudoPayInputField.swift in Sources */,
 				3B02A04C1CAA76B000953312 /* JudoErrorCategory.swift in Sources */,
+				70347BE71E2D2C4100AA5390 /* ApplicationTracking.swift in Sources */,
 				3B02A0431CAA76B000953312 /* Response.swift in Sources */,
 				3B286FC81C3FCED400094D48 /* HintLabel.swift in Sources */,
 				DA39023E1B96092B001A703C /* SecurityInputField.swift in Sources */,
@@ -588,7 +620,9 @@
 				3B02A0381CAA76A500953312 /* TransactionProcess.swift in Sources */,
 				3B02ED1B1C63BD770045C705 /* Theme.swift in Sources */,
 				DAC0A3D51BB14A8000EA689D /* 3DSWebView.swift in Sources */,
+				70347BED1E2D2F0200AA5390 /* TrackedField.swift in Sources */,
 				3B02A04B1CAA76B000953312 /* JudoModelErrorCode.swift in Sources */,
+				70347BEB1E2D2DD600AA5390 /* FieldMetaDataGenerator.swift in Sources */,
 				3B286FBC1C3ED7F200094D48 /* CardNetwork+CardLogoType.swift in Sources */,
 				3B02A0361CAA76A500953312 /* Session.swift in Sources */,
 				3B02A0351CAA76A500953312 /* Receipt.swift in Sources */,
@@ -604,9 +638,11 @@
 				3B02A0311CAA76A500953312 /* RegisterCard.swift in Sources */,
 				DA99F4CB1C0F56CD001EADC6 /* JudoPayInputDelegate.swift in Sources */,
 				DAE045281BFF2CC7008CF017 /* JudoPayView.swift in Sources */,
+				70B3D4711E2D3C5B002487DC /* Tracking.swift in Sources */,
 				DA7418BF1B9EF8F000C4D323 /* UIColor+Judo.swift in Sources */,
 				3B02A0321CAA76A500953312 /* Refund.swift in Sources */,
 				3B02A02F1CAA76A500953312 /* Payment.swift in Sources */,
+				70347BE91E2D2D1000AA5390 /* Field.swift in Sources */,
 				DAB051381BD797CA00888E06 /* FloatingTextField.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

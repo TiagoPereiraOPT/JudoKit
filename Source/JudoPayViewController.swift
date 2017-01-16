@@ -227,7 +227,6 @@ open class JudoPayViewController: UIViewController {
     
     // MARK: Button Actions
     
-    
     /**
     When the user hits the pay button, the information is collected from the fields and passed to the backend. The transaction will then be executed.
     
@@ -243,6 +242,8 @@ open class JudoPayViewController: UIViewController {
         self.myView.postCodeInputField.textField.resignFirstResponder()
         
         self.myView.loadingView.startAnimating()
+        
+        Tracking.sharedInstance.push()
         
         do {
             let transaction = try self.judoKitSession.transaction(self.myView.transactionType, judoId: judoId, amount: amount, reference: reference)

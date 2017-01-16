@@ -129,6 +129,7 @@ open class JudoPayView: UIView {
         
         NotificationCenter.default.addObserver(self, selector: #selector(JudoPayView.keyboardWillShow(_:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(JudoPayView.keyboardWillHide(_:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(JudoPayView.applicationDidBecomeActive(_:)), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
     }
     
     
@@ -151,6 +152,7 @@ open class JudoPayView: UIView {
     deinit {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
     }
     
     /**
@@ -178,6 +180,9 @@ open class JudoPayView: UIView {
             }, completion: nil)
     }
     
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        Tracking.sharedInstance.applicationDidBecomeActive(application: application)
+    }
     
     /**
      This method will receive the keyboard will disappear notification to fit the size of the contentview accordingly

@@ -167,4 +167,7 @@ open class PostCodeInputField: JudoPayInputField {
         return 120
     }
     
+    open override func fieldName() -> String {
+        return "postcode"
+    }
 }

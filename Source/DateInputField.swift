@@ -180,6 +180,7 @@ open class DateInputField: JudoPayInputField {
             }
             
             self.textField.text = newString + "/"
+            Tracking.sharedInstance.didChangeInputText(textField: self)
             return false
 
         } else if newString.characters.count == 3 {
@@ -279,6 +280,9 @@ open class DateInputField: JudoPayInputField {
         return "MM/YY"
     }
 
+    open override func fieldName() -> String {
+        return isStartDate ? "Start date" : "Expiry date"
+    }
 }
 
 

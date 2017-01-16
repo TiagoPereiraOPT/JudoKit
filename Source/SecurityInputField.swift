@@ -154,5 +154,8 @@ open class SecurityInputField: JudoPayInputField {
         }
         return "Security code"
     }
-
+    
+    open override func fieldName() -> String {
+        return "securityCode"
+    }
 }

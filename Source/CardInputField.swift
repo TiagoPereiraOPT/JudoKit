@@ -179,5 +179,9 @@ open class CardInputField: JudoPayInputField {
     open override func hintLabelText() -> String {
         return "Long card number"
     }
+    
+    open override func fieldName() -> String {
+        return "cardNumber"
+    }
 
 }

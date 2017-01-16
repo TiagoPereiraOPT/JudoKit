@@ -138,4 +138,7 @@ open class IssueNumberInputField: JudoPayInputField {
         return "Issue number on front of card"
     }
 
+    open override func fieldName() -> String {
+        return "issueNumber"
+    }
 }
