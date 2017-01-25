@@ -52,6 +52,11 @@
 		3BA69A881CCFC02500F79680 /* ErrorAnimatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BA69A871CCFC02500F79680 /* ErrorAnimatable.swift */; };
 		3BC4C0D01C6204A60010CE14 /* JudoPayView+JudoPayInputDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BC4C0CF1C6204A60010CE14 /* JudoPayView+JudoPayInputDelegate.swift */; };
 		3BFD9A951CD9F74E00B8385D /* DedupTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFD9A931CD9F72B00B8385D /* DedupTestCase.swift */; };
+		7003708B1E366B3B00B1F658 /* WalletServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700370891E366A4E00B1F658 /* WalletServiceTests.swift */; };
+		700370901E366C4900B1F658 /* WalletRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7003708F1E366C4900B1F658 /* WalletRepositoryProtocol.swift */; };
+		700370921E366C8000B1F658 /* WalletCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700370911E366C8000B1F658 /* WalletCard.swift */; };
+		700370961E366D5600B1F658 /* WalletService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700370951E366D5600B1F658 /* WalletService.swift */; };
+		700370A31E37B18400B1F658 /* FakeWalletRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7003708D1E366B8700B1F658 /* FakeWalletRepository.swift */; };
 		7028042E1CE4DC2100150B21 /* CardDetailsSetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7028042D1CE4DC2100150B21 /* CardDetailsSetTests.swift */; };
 		705214251E25435E00C17BD8 /* DeviceDNA.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 705214241E25435E00C17BD8 /* DeviceDNA.framework */; };
 		705214261E25439700C17BD8 /* DeviceDNA.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 705214241E25435E00C17BD8 /* DeviceDNA.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -153,6 +158,11 @@
 		3BA69A871CCFC02500F79680 /* ErrorAnimatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorAnimatable.swift; sourceTree = "<group>"; };
 		3BC4C0CF1C6204A60010CE14 /* JudoPayView+JudoPayInputDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "JudoPayView+JudoPayInputDelegate.swift"; sourceTree = "<group>"; };
 		3BFD9A931CD9F72B00B8385D /* DedupTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DedupTestCase.swift; sourceTree = "<group>"; };
+		700370891E366A4E00B1F658 /* WalletServiceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletServiceTests.swift; sourceTree = "<group>"; };
+		7003708D1E366B8700B1F658 /* FakeWalletRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FakeWalletRepository.swift; path = ../FakeWalletRepository.swift; sourceTree = "<group>"; };
+		7003708F1E366C4900B1F658 /* WalletRepositoryProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletRepositoryProtocol.swift; sourceTree = "<group>"; };
+		700370911E366C8000B1F658 /* WalletCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletCard.swift; sourceTree = "<group>"; };
+		700370951E366D5600B1F658 /* WalletService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletService.swift; sourceTree = "<group>"; };
 		7028042D1CE4DC2100150B21 /* CardDetailsSetTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardDetailsSetTests.swift; sourceTree = "<group>"; };
 		705214241E25435E00C17BD8 /* DeviceDNA.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DeviceDNA.framework; path = DeviceDNA/Framework/DeviceDNA.framework; sourceTree = "<group>"; };
 		7068ABF11D2BC0B600581A5A /* ThemeTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeTests.swift; sourceTree = "<group>"; };
@@ -250,6 +260,7 @@
 		3B5A600A1CAACF6100E98AC6 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				700370881E366A3F00B1F658 /* Wallet */,
 				3B02A0501CAA7B0000953312 /* AuthenticationTests.swift */,
 				3B02A0571CAA7B0000953312 /* CollectionTests.swift */,
 				3BFD9A931CD9F72B00B8385D /* DedupTestCase.swift */,
@@ -274,6 +285,25 @@
 				7068ABF11D2BC0B600581A5A /* ThemeTests.swift */,
 			);
 			path = Tests;
+			sourceTree = "<group>";
+		};
+		700370881E366A3F00B1F658 /* Wallet */ = {
+			isa = PBXGroup;
+			children = (
+				7003708D1E366B8700B1F658 /* FakeWalletRepository.swift */,
+				700370891E366A4E00B1F658 /* WalletServiceTests.swift */,
+			);
+			name = Wallet;
+			sourceTree = "<group>";
+		};
+		7003708C1E366B6500B1F658 /* Wallet */ = {
+			isa = PBXGroup;
+			children = (
+				7003708F1E366C4900B1F658 /* WalletRepositoryProtocol.swift */,
+				700370911E366C8000B1F658 /* WalletCard.swift */,
+				700370951E366D5600B1F658 /* WalletService.swift */,
+			);
+			name = Wallet;
 			sourceTree = "<group>";
 		};
 		705214231E25435100C17BD8 /* DeviceDNA */ = {
@@ -335,6 +365,7 @@
 		DA76A5F31B7B73D30033E553 = {
 			isa = PBXGroup;
 			children = (
+				7003708C1E366B6500B1F658 /* Wallet */,
 				705214231E25435100C17BD8 /* DeviceDNA */,
 				DA76A5FF1B7B73D30033E553 /* Source */,
 				3B5A600A1CAACF6100E98AC6 /* Tests */,
@@ -532,9 +563,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				7068ABF31D2BC19300581A5A /* ThemeTests.swift in Sources */,
+				700370A31E37B18400B1F658 /* FakeWalletRepository.swift in Sources */,
 				70ADAAD41CE247EC00DC0172 /* JudoTestCaseConfig.swift in Sources */,
 				3B5A601F1CAACFFE00E98AC6 /* ReceiptTests.swift in Sources */,
 				3B5A60141CAACFFE00E98AC6 /* JudoTestCase.swift in Sources */,
+				7003708B1E366B3B00B1F658 /* WalletServiceTests.swift in Sources */,
 				3B5A60201CAACFFE00E98AC6 /* SessionTests.swift in Sources */,
 				3B5A601C1CAACFFE00E98AC6 /* CollectionTests.swift in Sources */,
 				3B5A60161CAACFFE00E98AC6 /* TransactionTests.swift in Sources */,
@@ -567,6 +600,8 @@
 				3BA69A881CCFC02500F79680 /* ErrorAnimatable.swift in Sources */,
 				3B02A0481CAA76B000953312 /* JudoErrors.swift in Sources */,
 				70F49E281DC353C6003B8D3B /* NSDate+Judo.swift in Sources */,
+				700370961E366D5600B1F658 /* WalletService.swift in Sources */,
+				700370921E366C8000B1F658 /* WalletCard.swift in Sources */,
 				DA53A27F1BDE430B000C0A99 /* NSTimer+Blocks.swift in Sources */,
 				DA3902461B983959001A703C /* JudoPayInputField.swift in Sources */,
 				3B02A04C1CAA76B000953312 /* JudoErrorCategory.swift in Sources */,
@@ -605,6 +640,7 @@
 				DA7418BF1B9EF8F000C4D323 /* UIColor+Judo.swift in Sources */,
 				3B02A0321CAA76A500953312 /* Refund.swift in Sources */,
 				3B02A02F1CAA76A500953312 /* Payment.swift in Sources */,
+				700370901E366C4900B1F658 /* WalletRepositoryProtocol.swift in Sources */,
 				DAB051381BD797CA00888E06 /* FloatingTextField.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
