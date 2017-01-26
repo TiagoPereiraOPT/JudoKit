@@ -27,6 +27,7 @@ import Foundation
 typealias OrderedWallet = [WalletCard]
 
 struct WalletService {
+    private let maxNumberOfCardsAllowed = 20
     private let repo: WalletRepositoryProtocol
 
     init(repo: WalletRepositoryProtocol) {
@@ -37,23 +38,35 @@ struct WalletService {
         var cardToAdd = card
         
         if card.defaultPaymentMethod {
-            self.updateAllCardsToNotDefault()
+            self.resignCurrentDefault()
         }
         else if self.walletIsEmpty() {
             //Make default as this will be the only card in the wallet.
-            cardToAdd = card.makeDefaultPaymentMethod()
+            cardToAdd = card.withDefaultCard()
         }
         
         self.repo.save(walletCard: cardToAdd)
     }
     
-    func update(card: WalletCard) {
+    func update(card: WalletCard) throws {
+        guard let _ = self.get(id: card.id) else {
+            throw WalletError.unknownWalletCard
+        }
+        
         self.repo.remove(id: card.id)
-        self.repo.save(walletCard: card)
+        self.add(card: card)
     }
     
     func remove(card: WalletCard) {
         self.repo.remove(id: card.id)
+        
+        if card.defaultPaymentMethod {
+            self.resignCurrentDefault()
+            
+            if let newDefault = self.get().first {
+                self.makeDefault(card: newDefault)
+            }
+        }
     }
     
     func get(id: UUID) -> WalletCard? {
@@ -61,22 +74,37 @@ struct WalletService {
     }
     
     func get() -> OrderedWallet {
-        return self.repo.get();
+        return self.getUnordered().sorted(by: { (lhs, rhs) -> Bool in
+            if lhs.defaultPaymentMethod && !rhs.defaultPaymentMethod {
+                return true
+            }
+            //return lhs.dateCreated.timeIntervalSinceReferenceDate < rhs.dateCreated.timeIntervalSinceReferenceDate
+            
+            return false
+        })
     }
   
     func getDefault() -> WalletCard? {
-        return self.repo.get().filter({ $0.defaultPaymentMethod }).first
+        return self.getUnordered().filter({ $0.defaultPaymentMethod }).first
+    }
+    
+    private func makeDefault(card: WalletCard) {
+        self.repo.remove(id: card.id)
+        self.repo.save(walletCard: card.withDefaultCard())
+    }
+    
+    private func resignCurrentDefault() {
+        if let currentDefault = self.getDefault() {
+            self.repo.remove(id: currentDefault.id)
+            self.repo.save(walletCard: currentDefault.withNonDefaultCard())
+        }
+    }
+    
+    private func getUnordered() -> [WalletCard] {
+        return self.repo.get()
     }
     
     private func walletIsEmpty() -> Bool {
         return self.get().count == 0
-    }
-    
-    private func updateAllCardsToNotDefault() {
-        let nonDefault = self.get().map({ $0.makeNonDefaultPaymentMethod() })
-        
-        for card in nonDefault {
-            self.update(card: card)
-        }
     }
 }

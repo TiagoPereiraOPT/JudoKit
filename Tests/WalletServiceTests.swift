@@ -27,18 +27,18 @@ import XCTest
 
 class WalletServiceTests : JudoTestCase {
     
-    private var repo = FakeWalletRepository()
-    private var sut = WalletService(repo: FakeWalletRepository())
+    private var repo = InMemoryWalletRepository()
+    private var sut = WalletService(repo: InMemoryWalletRepository())
     
     override func setUp() {
-        self.repo = FakeWalletRepository()
+        self.repo = InMemoryWalletRepository()
         self.sut = WalletService(repo: repo)
     }
     
     //Adding first card to wallet must set that card as default
     func test_AddingFirstCardMustBeSetAsDefault() {
         //arr
-        let addedCard = self.buildWalletCard(dateCreated: Date(), dateUpdated: nil, isDefault: false)
+        let addedCard = self.buildWalletCard(isDefault: false)
         
         //act
         self.sut.add(card: addedCard)
@@ -53,8 +53,8 @@ class WalletServiceTests : JudoTestCase {
     //Adding second card to wallet must not set that card as default
     func test_AddingSecondCardMustNotBeSetAsDefault() {
         //arr
-        let firstAddedCard = self.buildWalletCard(dateCreated: Date(), dateUpdated: nil, isDefault: false)
-        let secondAddedCard = self.buildWalletCard(dateCreated: Date().addingTimeInterval(1.0), dateUpdated: nil, isDefault: false)
+        let firstAddedCard = self.buildWalletCard(isDefault: false)
+        let secondAddedCard = self.buildWalletCard(isDefault: false)
         
         //act
         self.sut.add(card: firstAddedCard)
@@ -73,8 +73,8 @@ class WalletServiceTests : JudoTestCase {
     //Adding second card to wallet as default must set that card as default
     func test_AddingSecondCardAsDefaultMustBeSetAsDefault() {
         //arr
-        let firstAddedCard = self.buildWalletCard(dateCreated: Date(), dateUpdated: nil, isDefault: false)
-        let secondAddedCard = self.buildWalletCard(dateCreated: Date().addingTimeInterval(1.0), dateUpdated: nil, isDefault: true)
+        let firstAddedCard = self.buildWalletCard(isDefault: false)
+        let secondAddedCard = self.buildWalletCard(isDefault: true)
         
         //act
         self.sut.add(card: firstAddedCard)
@@ -97,45 +97,173 @@ class WalletServiceTests : JudoTestCase {
     
     //Updating card to wallet must not set that card as default
     func test_UpdatingCardMustNotSetCardAsDefault() {
-    
+        //arr
+        let firstAddedCard = self.buildWalletCard(isDefault: true)
+        let secondAddedCard = self.buildWalletCard(isDefault: false)
+        
+        //act
+        self.sut.add(card: firstAddedCard)
+        self.sut.add(card: secondAddedCard)
+        //Update the second card.
+        try! self.sut.update(card: secondAddedCard)
+        
+        //assert
+        let firstRetrievedCard = self.sut.get(id: firstAddedCard.id)
+        let secondRetrievedCard = self.sut.get(id: secondAddedCard.id)
+        
+        XCTAssertNotNil(firstRetrievedCard)
+        XCTAssertTrue(firstRetrievedCard!.defaultPaymentMethod)
+        XCTAssertNotNil(secondAddedCard)
+        XCTAssertFalse(secondRetrievedCard!.defaultPaymentMethod)
     }
     
     //Updating card to wallet as default must set that card as default
     func test_UpdatingCardAsDefaultMustSetCardAsDefault() {
-    
+        //arr
+        let firstAddedCard = self.buildWalletCard(isDefault: true)
+        let secondAddedCard = self.buildWalletCard(isDefault: false)
+        
+        //act
+        self.sut.add(card: firstAddedCard)
+        self.sut.add(card: secondAddedCard)
+        //Update the second card.
+        try! self.sut.update(card: secondAddedCard.withDefaultCard())
+        
+        //assert
+        let firstRetrievedCard = self.sut.get(id: firstAddedCard.id)
+        let secondRetrievedCard = self.sut.get(id: secondAddedCard.id)
+        
+        XCTAssertNotNil(firstRetrievedCard)
+        XCTAssertFalse(firstRetrievedCard!.defaultPaymentMethod)
+        XCTAssertNotNil(secondAddedCard)
+        XCTAssertTrue(secondRetrievedCard!.defaultPaymentMethod)
     }
     
     //Updating card with UUID that doesn't exist must throw exception
     func test_UpdatingCardWithUUIDThatDoesNotExistMustThrowException() {
-    
+        //arr
+        let firstAddedCard = self.buildWalletCard(isDefault: true)
+        
+        //act //assert
+        do {
+            try self.sut.update(card: firstAddedCard)
+            XCTFail()
+        } catch let error as Error {
+            let walletError = error as! WalletError
+            XCTAssertNotNil(walletError)
+            XCTAssertNotNil(walletError.description())
+            XCTAssertTrue(walletError.description() == WalletError.unknownWalletCard.description())
+        }
     }
     
     //Trying to update card with existing UUID must replace existing card
     func test_TryingToUpdateCardWithUUIDThatExistsMustReplaceThatCard() {
-    
+        //arr
+        let firstAddedCard = self.buildWalletCard(isDefault: false)
+        
+        //act
+        self.sut.add(card: firstAddedCard)
+        
+        let newAssignedName = self.uuidString()
+        
+        try! self.sut.update(card: firstAddedCard.withAssignedCardName(assignedName: newAssignedName))
+        
+        //assert
+        let firstRetrievedCard = self.sut.get(id: firstAddedCard.id)
+        XCTAssertNotNil(firstRetrievedCard)
+        XCTAssertEqual(firstAddedCard.id, firstRetrievedCard!.id)
+        XCTAssertEqual(newAssignedName, firstRetrievedCard!.assignedName)
     }
     
     //Removing default card must shift priority to next highest
     func test_RemovingDefaultCardMustShiftPriorityToNextHighest() {
-    
+        //arr
+        let firstAddedCard = self.buildWalletCard(isDefault: false, alias: "first")
+        let secondAddedCard = self.buildWalletCard(isDefault: false, alias: "second")
+        let thirdAddedCard = self.buildWalletCard(isDefault: true, alias: "third")
+        let forthAddedCard = self.buildWalletCard(isDefault: false, alias: "forth")
+        
+        //act
+        self.sut.add(card: firstAddedCard)
+        self.sut.add(card: secondAddedCard)
+        self.sut.add(card: thirdAddedCard)
+        self.sut.add(card: forthAddedCard)
+        
+        self.sut.remove(card: thirdAddedCard)
+        
+        //assert
+        let retrievedCard = self.sut.getDefault()
+        XCTAssertNotNil(retrievedCard)
+        //Removing the third card should the default to the forth card as it was created last.
+        XCTAssertEqual(retrievedCard!.id, forthAddedCard.id)
     }
     
     //Removing card UUID that doesn't exist must not thrown execption
     func test_RemovingCardWithUUIDThatDoesNotExistMustNotThrowException() {
-    
+        //arr
+        let firstAddedCard = self.buildWalletCard(isDefault: false)
+        
+        //act assert
+        self.sut.remove(card: firstAddedCard)
     }
     
     //Calling get default must return defsult card
-    func test_CallingGetDefaultCardMustRetrunDefaultCard() {
-    
+    func test_CallingGetDefaultCardMustReturnDefaultCard() {
+        //arr
+        let firstAddedCard = self.buildWalletCard(isDefault: false)
+        let secondAddedCard = self.buildWalletCard(isDefault: false)
+        let thirdAddedCard = self.buildWalletCard(isDefault: true)
+        let forthAddedCard = self.buildWalletCard(isDefault: false)
+        
+        //act
+        self.sut.add(card: firstAddedCard)
+        self.sut.add(card: secondAddedCard)
+        self.sut.add(card: thirdAddedCard)
+        self.sut.add(card: forthAddedCard)
+        
+        //assert
+        let retrievedCard = self.sut.getDefault()
+        XCTAssertNotNil(retrievedCard)
+        XCTAssertEqual(retrievedCard!.id, thirdAddedCard.id)
     }
     
     //Card list must be ordered by default then date updated desc then date created desc
     func test_CardListMustBePrioritised() {
-    
+        let firstAddedCard = self.buildWalletCard(isDefault: false, alias: "first")
+        let secondAddedCard = self.buildWalletCard(isDefault: false, alias: "second")
+        let thirdAddedCard = self.buildWalletCard(isDefault: true, alias: "third")
+        let forthAddedCard = self.buildWalletCard(isDefault: false, alias: "forth")
+        let fifthAddedCard = self.buildWalletCard(isDefault: false, alias: "fifth")
+        
+        self.sut.add(card: firstAddedCard)
+        self.sut.add(card: secondAddedCard)
+        self.sut.add(card: thirdAddedCard)
+        self.sut.add(card: forthAddedCard)
+        self.sut.add(card: fifthAddedCard)
+        //3,5,4,2,1
+        
+        self.sut.remove(card: thirdAddedCard)
+        //5,4,2,1
+        try! self.sut.update(card: firstAddedCard.withAssignedCardName(assignedName: "first-updated"))
+        //5,1,4,2
+        
+        let walletCards = self.sut.get()
+        XCTAssertEqual(walletCards.count, 4)
+        XCTAssertEqual(walletCards[0].id, fifthAddedCard.id)
+        XCTAssertEqual(walletCards[1].id, firstAddedCard.id)
+        XCTAssertEqual(walletCards[2].id, forthAddedCard.id)
+        XCTAssertEqual(walletCards[3].id, secondAddedCard.id)
     }
     
-    private func buildWalletCard(dateCreated: Date, dateUpdated: Date?, isDefault: Bool) -> WalletCard {
-        return WalletCard(cardNumberLastFour: "1234", expiryDate: "01/20", cardToken: "testcardtoken1234", cardType: 1, assignedName: "test card", dateCreated: dateCreated, dateUpdated: dateUpdated, defaultPaymentMethod: isDefault)
+    private func buildWalletCard(isDefault: Bool) -> WalletCard {
+        return self.buildWalletCard(isDefault: isDefault, alias: self.uuidString())
+    }
+    
+    private func buildWalletCard(isDefault: Bool, alias: String) -> WalletCard {
+        return WalletCard(cardNumberLastFour: self.uuidString(), expiryDate: self.uuidString(), cardToken: self.uuidString(), cardType: 1, assignedName: alias, defaultPaymentMethod: isDefault)
+    }
+    
+    private func uuidString() -> String {
+        return UUID().uuidString
     }
 }

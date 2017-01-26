@@ -1,5 +1,5 @@
 //
-//  FakeWalletRepository.swift
+//  WalletError.swift
 //  JudoKit
 //
 //  Copyright (c) 2016 Alternative Payments Ltd
@@ -23,25 +23,16 @@
 //  SOFTWARE.
 
 import Foundation
-@testable import JudoKit
 
-class FakeWalletRepository : WalletRepositoryProtocol {
+enum WalletError : Error {
+    case unknownWalletCard, walletCardLimitReached
     
-    var repo = [WalletCard]()
-    
-    func save(walletCard: WalletCard) {
-        self.repo.append(walletCard)
-    }
-    
-    func get() -> [WalletCard] {
-        return self.repo
-    }
-    
-    func get(id: UUID) -> WalletCard? {
-        return self.repo.filter({ return $0.id == id }).first
-    }
-    
-    func remove(id: UUID) {
-        self.repo = self.repo.filter({ return $0.id != id })
+    func description() -> String {
+        switch self {
+        case .unknownWalletCard:
+            return "The wallet card is not know. Has it been added?"
+        case .walletCardLimitReached:
+            return "Too many cards have been added to the wallet"
+        }
     }
 }
