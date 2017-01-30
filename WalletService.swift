@@ -38,18 +38,17 @@ struct WalletService {
         guard self.walletIsNotFull() else {
             throw WalletError.walletCardLimitPassed
         }
-        
-        var cardToAdd = card
-        
+
         if card.defaultPaymentMethod {
             self.resignCurrentDefault()
         }
         else if self.walletIsEmpty() {
             //Make default as this will be the only card in the wallet.
-            cardToAdd = card.withDefaultCard()
+            self.repo.save(walletCard: card.withDefaultCard())
         }
-        
-        self.repo.save(walletCard: cardToAdd)
+        else {
+            self.repo.save(walletCard: card)
+        }
     }
     
     func update(card: WalletCard) throws {
