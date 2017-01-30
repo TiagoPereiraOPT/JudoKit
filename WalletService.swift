@@ -27,14 +27,18 @@ import Foundation
 typealias OrderedWallet = [WalletCard]
 
 struct WalletService {
-    private let maxNumberOfCardsAllowed = 20
+    public let maxNumberOfCardsAllowed = 20
     private let repo: WalletRepositoryProtocol
 
     init(repo: WalletRepositoryProtocol) {
         self.repo = repo
     }
     
-    func add(card: WalletCard) {
+    func add(card: WalletCard) throws {
+        guard self.walletIsNotFull() else {
+            throw WalletError.walletCardLimitPassed
+        }
+        
         var cardToAdd = card
         
         if card.defaultPaymentMethod {
@@ -54,7 +58,7 @@ struct WalletService {
         }
         
         self.repo.remove(id: card.id)
-        self.add(card: card)
+        try self.add(card: card)
     }
     
     func remove(card: WalletCard) {
@@ -75,12 +79,21 @@ struct WalletService {
     
     func get() -> OrderedWallet {
         return self.getUnordered().sorted(by: { (lhs, rhs) -> Bool in
+            let pastDate = Date.distantPast
+            let lhsDateUpdated = lhs.dateUpdated ?? pastDate
+            let rhsDateUpdated = rhs.dateUpdated ?? pastDate
+            
             if lhs.defaultPaymentMethod && !rhs.defaultPaymentMethod {
                 return true
             }
-            //return lhs.dateCreated.timeIntervalSinceReferenceDate < rhs.dateCreated.timeIntervalSinceReferenceDate
+            else if(!lhs.defaultPaymentMethod && rhs.defaultPaymentMethod) {
+                return false
+            }
+            else if (lhsDateUpdated != rhsDateUpdated) {
+                return lhsDateUpdated > rhsDateUpdated
+            }
             
-            return false
+            return lhs.dateCreated > rhs.dateCreated
         })
     }
   
@@ -106,5 +119,9 @@ struct WalletService {
     
     private func walletIsEmpty() -> Bool {
         return self.get().count == 0
+    }
+    
+    private func walletIsNotFull() -> Bool {
+        return self.get().count < self.maxNumberOfCardsAllowed
     }
 }

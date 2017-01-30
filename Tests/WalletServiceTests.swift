@@ -41,7 +41,7 @@ class WalletServiceTests : JudoTestCase {
         let addedCard = self.buildWalletCard(isDefault: false)
         
         //act
-        self.sut.add(card: addedCard)
+        try! self.sut.add(card: addedCard)
         
         //assert
         let retrievedCard = self.sut.get(id: addedCard.id)
@@ -57,8 +57,8 @@ class WalletServiceTests : JudoTestCase {
         let secondAddedCard = self.buildWalletCard(isDefault: false)
         
         //act
-        self.sut.add(card: firstAddedCard)
-        self.sut.add(card: secondAddedCard)
+        try! self.sut.add(card: firstAddedCard)
+        try! self.sut.add(card: secondAddedCard)
         
         //assert
         let firstRetrievedCard = self.sut.get(id: firstAddedCard.id)
@@ -77,8 +77,8 @@ class WalletServiceTests : JudoTestCase {
         let secondAddedCard = self.buildWalletCard(isDefault: true)
         
         //act
-        self.sut.add(card: firstAddedCard)
-        self.sut.add(card: secondAddedCard)
+        try! self.sut.add(card: firstAddedCard)
+        try! self.sut.add(card: secondAddedCard)
         
         //assert
         let firstRetrievedCard = self.sut.get(id: firstAddedCard.id)
@@ -102,8 +102,8 @@ class WalletServiceTests : JudoTestCase {
         let secondAddedCard = self.buildWalletCard(isDefault: false)
         
         //act
-        self.sut.add(card: firstAddedCard)
-        self.sut.add(card: secondAddedCard)
+        try! self.sut.add(card: firstAddedCard)
+        try! self.sut.add(card: secondAddedCard)
         //Update the second card.
         try! self.sut.update(card: secondAddedCard)
         
@@ -124,8 +124,8 @@ class WalletServiceTests : JudoTestCase {
         let secondAddedCard = self.buildWalletCard(isDefault: false)
         
         //act
-        self.sut.add(card: firstAddedCard)
-        self.sut.add(card: secondAddedCard)
+        try! self.sut.add(card: firstAddedCard)
+        try! self.sut.add(card: secondAddedCard)
         //Update the second card.
         try! self.sut.update(card: secondAddedCard.withDefaultCard())
         
@@ -162,7 +162,7 @@ class WalletServiceTests : JudoTestCase {
         let firstAddedCard = self.buildWalletCard(isDefault: false)
         
         //act
-        self.sut.add(card: firstAddedCard)
+        try! self.sut.add(card: firstAddedCard)
         
         let newAssignedName = self.uuidString()
         
@@ -184,10 +184,10 @@ class WalletServiceTests : JudoTestCase {
         let forthAddedCard = self.buildWalletCard(isDefault: false, alias: "forth")
         
         //act
-        self.sut.add(card: firstAddedCard)
-        self.sut.add(card: secondAddedCard)
-        self.sut.add(card: thirdAddedCard)
-        self.sut.add(card: forthAddedCard)
+        try! self.sut.add(card: firstAddedCard)
+        try! self.sut.add(card: secondAddedCard)
+        try! self.sut.add(card: thirdAddedCard)
+        try! self.sut.add(card: forthAddedCard)
         
         self.sut.remove(card: thirdAddedCard)
         
@@ -216,10 +216,10 @@ class WalletServiceTests : JudoTestCase {
         let forthAddedCard = self.buildWalletCard(isDefault: false)
         
         //act
-        self.sut.add(card: firstAddedCard)
-        self.sut.add(card: secondAddedCard)
-        self.sut.add(card: thirdAddedCard)
-        self.sut.add(card: forthAddedCard)
+        try! self.sut.add(card: firstAddedCard)
+        try! self.sut.add(card: secondAddedCard)
+        try! self.sut.add(card: thirdAddedCard)
+        try! self.sut.add(card: forthAddedCard)
         
         //assert
         let retrievedCard = self.sut.getDefault()
@@ -235,12 +235,13 @@ class WalletServiceTests : JudoTestCase {
         let forthAddedCard = self.buildWalletCard(isDefault: false, alias: "forth")
         let fifthAddedCard = self.buildWalletCard(isDefault: false, alias: "fifth")
         
-        self.sut.add(card: firstAddedCard)
-        self.sut.add(card: secondAddedCard)
-        self.sut.add(card: thirdAddedCard)
-        self.sut.add(card: forthAddedCard)
-        self.sut.add(card: fifthAddedCard)
-        //3,5,4,2,1
+        try! self.sut.add(card: firstAddedCard)
+        try! self.sut.add(card: secondAddedCard)
+        try! self.sut.add(card: thirdAddedCard)
+        //3,1,2
+        try! self.sut.add(card: forthAddedCard)
+        try! self.sut.add(card: fifthAddedCard)
+        //3,1,5,4,2
         
         self.sut.remove(card: thirdAddedCard)
         //5,4,2,1
@@ -253,6 +254,30 @@ class WalletServiceTests : JudoTestCase {
         XCTAssertEqual(walletCards[1].id, firstAddedCard.id)
         XCTAssertEqual(walletCards[2].id, forthAddedCard.id)
         XCTAssertEqual(walletCards[3].id, secondAddedCard.id)
+    }
+    
+    //Trying to add a card over limit threashold must throw exception.
+    func test_TryingToAddACardOverLimitThreasholdMustThrowException() {
+        //arr
+        let firstNCards = (1...sut.maxNumberOfCardsAllowed).map {
+            return self.buildWalletCard(isDefault: false, alias: String(describing: $0))
+        }
+        
+        for card in firstNCards {
+            try! self.sut.add(card: card)
+        }
+        
+        //act //assert
+        do {
+            let throwingCard = self.buildWalletCard(isDefault: false, alias: "Throwing card")
+            try self.sut.add(card: throwingCard)
+            XCTFail()
+        } catch let error {
+            let walletError = error as! WalletError
+            XCTAssertNotNil(walletError)
+            XCTAssertNotNil(walletError.description())
+            XCTAssertTrue(walletError.description() == WalletError.walletCardLimitPassed.description())
+        }
     }
     
     private func buildWalletCard(isDefault: Bool) -> WalletCard {

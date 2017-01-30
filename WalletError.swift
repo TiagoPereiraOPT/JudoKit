@@ -25,13 +25,13 @@
 import Foundation
 
 enum WalletError : Error {
-    case unknownWalletCard, walletCardLimitReached
+    case unknownWalletCard, walletCardLimitPassed
     
     func description() -> String {
         switch self {
         case .unknownWalletCard:
             return "The wallet card is not know. Has it been added?"
-        case .walletCardLimitReached:
+        case .walletCardLimitPassed:
             return "Too many cards have been added to the wallet"
         }
     }
