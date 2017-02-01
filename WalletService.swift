@@ -53,13 +53,11 @@ struct WalletService {
     }
     
     func update(card: WalletCard) throws {
-        let currentCard = self.get(id: card.id)
-        
-        guard let _ = currentCard else {
+        guard let currentCard = self.get(id: card.id) else {
             throw WalletError.unknownWalletCard
         }
         
-        if self.isIllegallyResigningDefault(currentCard: currentCard!, updatedCard: card) {
+        if self.isIllegallyResigningDefault(currentCard: currentCard, updatedCard: card) {
             throw WalletError.cannotResignDefaultCard
         }
         
@@ -68,8 +66,6 @@ struct WalletService {
     }
     
     func remove(card: WalletCard) throws {
-        guard let 
-        
         if self.getUnordered().count > 1 && card.defaultPaymentMethod {
             throw WalletError.cannotRemoveDefaultCard
         }
