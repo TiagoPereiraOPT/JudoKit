@@ -68,6 +68,8 @@ struct WalletService {
     }
     
     func remove(card: WalletCard) throws {
+        guard let 
+        
         if self.getUnordered().count > 1 && card.defaultPaymentMethod {
             throw WalletError.cannotRemoveDefaultCard
         }
