@@ -307,6 +307,7 @@
 				70F2B9521E38CFD200A5AADA /* WalletError.swift */,
 			);
 			name = Wallet;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		705214231E25435100C17BD8 /* DeviceDNA */ = {
@@ -368,7 +369,6 @@
 		DA76A5F31B7B73D30033E553 = {
 			isa = PBXGroup;
 			children = (
-				7003708C1E366B6500B1F658 /* Wallet */,
 				705214231E25435100C17BD8 /* DeviceDNA */,
 				DA76A5FF1B7B73D30033E553 /* Source */,
 				3B5A600A1CAACF6100E98AC6 /* Tests */,
@@ -388,6 +388,7 @@
 		DA76A5FF1B7B73D30033E553 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				7003708C1E366B6500B1F658 /* Wallet */,
 				3B02A0231CAA769500953312 /* API */,
 				3B02A0241CAA769900953312 /* Model */,
 				3B02ED171C63BD6B0045C705 /* Theme */,
