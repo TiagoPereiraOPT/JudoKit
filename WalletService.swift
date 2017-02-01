@@ -39,28 +39,39 @@ struct WalletService {
             throw WalletError.walletCardLimitPassed
         }
 
-        if card.defaultPaymentMethod {
-            self.resignCurrentDefault()
-        }
-        else if self.walletIsEmpty() {
+        if self.walletIsEmpty() {
             //Make default as this will be the only card in the wallet.
             self.repo.save(walletCard: card.withDefaultCard())
         }
         else {
+            if card.defaultPaymentMethod {
+                self.resignCurrentDefault()
+            }
+            
             self.repo.save(walletCard: card)
         }
     }
     
     func update(card: WalletCard) throws {
-        guard let _ = self.get(id: card.id) else {
+        let currentCard = self.get(id: card.id)
+        
+        guard let _ = currentCard else {
             throw WalletError.unknownWalletCard
+        }
+        
+        if self.isIllegallyResigningDefault(currentCard: currentCard!, updatedCard: card) {
+            throw WalletError.cannotResignDefaultCard
         }
         
         self.repo.remove(id: card.id)
         try self.add(card: card)
     }
     
-    func remove(card: WalletCard) {
+    func remove(card: WalletCard) throws {
+        if self.getUnordered().count > 1 && card.defaultPaymentMethod {
+            throw WalletError.cannotRemoveDefaultCard
+        }
+        
         self.repo.remove(id: card.id)
         
         if card.defaultPaymentMethod {
@@ -78,20 +89,13 @@ struct WalletService {
     
     func get() -> OrderedWallet {
         return self.getUnordered().sorted(by: { (lhs, rhs) -> Bool in
-            let pastDate = Date.distantPast
-            let lhsDateUpdated = lhs.dateUpdated ?? pastDate
-            let rhsDateUpdated = rhs.dateUpdated ?? pastDate
-            
             if lhs.defaultPaymentMethod && !rhs.defaultPaymentMethod {
                 return true
             }
             else if(!lhs.defaultPaymentMethod && rhs.defaultPaymentMethod) {
                 return false
             }
-            else if (lhsDateUpdated != rhsDateUpdated) {
-                return lhsDateUpdated > rhsDateUpdated
-            }
-            
+
             return lhs.dateCreated > rhs.dateCreated
         })
     }
@@ -110,6 +114,10 @@ struct WalletService {
             self.repo.remove(id: currentDefault.id)
             self.repo.save(walletCard: currentDefault.withNonDefaultCard())
         }
+    }
+    
+    private func isIllegallyResigningDefault(currentCard: WalletCard, updatedCard: WalletCard) -> Bool {
+        return !self.walletIsEmpty() && currentCard.defaultPaymentMethod && !updatedCard.defaultPaymentMethod
     }
     
     private func getUnordered() -> [WalletCard] {

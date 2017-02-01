@@ -25,14 +25,19 @@
 import Foundation
 
 enum WalletError : Error {
-    case unknownWalletCard, walletCardLimitPassed
+    case unknownWalletCard, walletCardLimitPassed, cannotRemoveDefaultCard, cannotResignDefaultCard
     
     func description() -> String {
         switch self {
         case .unknownWalletCard:
             return "The wallet card is not know. Has it been added?"
         case .walletCardLimitPassed:
-            return "Too many cards have been added to the wallet"
+            return "Too many cards have been added to the wallet."
+        case .cannotRemoveDefaultCard:
+            return "Default card cannot be removed if two or more cards are in wallet."
+        case .cannotResignDefaultCard:
+            return "Card cannot resign default status of this card."
         }
+        
     }
 }

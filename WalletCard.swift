@@ -50,6 +50,22 @@ struct WalletCard {
     init(cardNumberLastFour: String, expiryDate: String, cardToken: String, cardType: Int, assignedName: String?, defaultPaymentMethod: Bool) {
         self.init(id: UUID(), cardNumberLastFour: cardNumberLastFour, expiryDate: expiryDate, cardToken: cardToken, cardType: cardType, assignedName: assignedName, dateCreated: Date(), dateUpdated: nil, defaultPaymentMethod: defaultPaymentMethod)
     }
+    
+    func hasCardExpired() -> Bool {
+        let splitExpiryDate = self.expiryDate.components(separatedBy: "/")
+        let month = Int(splitExpiryDate[0])
+        let year = Int("20\(splitExpiryDate[1])")
+        
+        var dateComponents = DateComponents(year: year, month: month)
+
+        let calendar = Calendar.current
+        let date = calendar.date(from: dateComponents)!
+        
+        let range = calendar.range(of: .day, in: .year, for: date)!
+        dateComponents.day = range.count
+
+        return Date() > calendar.date(from: dateComponents)!
+    }
 }
 
 extension WalletCard {
