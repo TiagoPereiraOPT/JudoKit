@@ -26,35 +26,8 @@ import Foundation
 
 protocol WalletDelgate {
     func didAddCardToWallet(card: WalletCard)
+    func didUpdateCardInWallet(card: WalletCard)
+    func didDeleteCardFromWallet(card: WalletCard)
 }
 
-struct Wallet {
-    var judoKit: JudoKit
-    let delegate: WalletDelgate
-    
-    init(judoId: String, token: String, secret: String, delegate: WalletDelgate) {
-        self.judoKit = JudoKit(token: token, secret: secret)
-        self.delegate = delegate
-    }
-    
-    func invokeWalletSleeve() {
-    
-    }
-    
-    func ash() {
-        self.delegate.didAddCardToWallet(card: WalletCard())
-    }
-}
 
-struct test {
-    func testt() {
-        let wallet = Wallet(judoId: "", token: "", secret: "", delegate: self)
-        wallet.invokeWalletSleeve()
-    }
-}
-
-extension test : WalletDelgate {
-    internal func didAddCardToWallet(card: WalletCard) {
-        
-    }
-}
