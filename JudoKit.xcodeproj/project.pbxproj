@@ -57,6 +57,7 @@
 		700370921E366C8000B1F658 /* WalletCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700370911E366C8000B1F658 /* WalletCard.swift */; };
 		700370961E366D5600B1F658 /* WalletService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700370951E366D5600B1F658 /* WalletService.swift */; };
 		700370A31E37B18400B1F658 /* InMemoryWalletRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7003708D1E366B8700B1F658 /* InMemoryWalletRepository.swift */; };
+		700A8EA31E42616C0059F0C5 /* Wallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700A8EA21E42616C0059F0C5 /* Wallet.swift */; };
 		7028042E1CE4DC2100150B21 /* CardDetailsSetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7028042D1CE4DC2100150B21 /* CardDetailsSetTests.swift */; };
 		705214251E25435E00C17BD8 /* DeviceDNA.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 705214241E25435E00C17BD8 /* DeviceDNA.framework */; };
 		705214261E25439700C17BD8 /* DeviceDNA.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 705214241E25435E00C17BD8 /* DeviceDNA.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -164,6 +165,7 @@
 		7003708F1E366C4900B1F658 /* WalletRepositoryProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletRepositoryProtocol.swift; sourceTree = "<group>"; };
 		700370911E366C8000B1F658 /* WalletCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletCard.swift; sourceTree = "<group>"; };
 		700370951E366D5600B1F658 /* WalletService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletService.swift; sourceTree = "<group>"; };
+		700A8EA21E42616C0059F0C5 /* Wallet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Wallet.swift; sourceTree = "<group>"; };
 		7028042D1CE4DC2100150B21 /* CardDetailsSetTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardDetailsSetTests.swift; sourceTree = "<group>"; };
 		705214241E25435E00C17BD8 /* DeviceDNA.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DeviceDNA.framework; path = DeviceDNA/Framework/DeviceDNA.framework; sourceTree = "<group>"; };
 		7068ABF11D2BC0B600581A5A /* ThemeTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeTests.swift; sourceTree = "<group>"; };
@@ -398,6 +400,7 @@
 				DA76A6001B7B73D30033E553 /* JudoKit.h */,
 				DA76A6021B7B73D30033E553 /* Info.plist */,
 				DAB261AC1B7B7A0B005024FF /* JudoKit.swift */,
+				700A8EA21E42616C0059F0C5 /* Wallet.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -595,6 +598,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				700A8EA31E42616C0059F0C5 /* Wallet.swift in Sources */,
 				DAD13A221B7C9E76007BB196 /* CardInputField.swift in Sources */,
 				3B02A0491CAA76B000953312 /* JudoErrorCode.swift in Sources */,
 				DA3902371B95DC62001A703C /* DateInputField.swift in Sources */,
